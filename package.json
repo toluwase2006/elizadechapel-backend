@@ -2,8 +2,8 @@
   "name": "elizadechapel-backend",
   "private": true,
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "start": "node api/index.js",
+    "dev": "nodemon api/index.js"
   },
   "dependencies": {
     "cloudinary": "^2.11.0",
