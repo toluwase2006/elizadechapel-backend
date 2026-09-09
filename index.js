@@ -9,6 +9,7 @@ const app = express();
 
 const clientOrigins = [
   "http://localhost:5173",
+  "http://192.168.1.22:8080/dashboard",
   process.env.CLIENT_ORIGIN,
 ].filter(Boolean);
 
