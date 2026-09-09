@@ -1,7 +1,15 @@
 const mongoose = require("mongoose");
 
 const bibleStudyDays = ["Sunday", "Tuesday", "Thursday"];
-const digestDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const digestDays = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
 
 const bibleStudySchema = new mongoose.Schema(
   {
