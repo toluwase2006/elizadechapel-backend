@@ -17,13 +17,16 @@ const clientOrigins = [
   process.env.CLIENT_ORIGIN,
 ].filter(Boolean);
 
+const corsOptions = {
+  origin: clientOrigins,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  credentials: true,
+};
+
 app.use(
-  cors({
-    origin: clientOrigins,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    credentials: true,
-  })
+  cors(corsOptions)
 );
+app.options(/.*/, cors(corsOptions));
 
 // Middleware
 app.use(express.json({ limit: "25mb" }));
