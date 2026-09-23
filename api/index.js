@@ -10,7 +10,7 @@ const app = express();
 
 // Allowed frontend origins
 const clientOrigins = [
-  "http://localhost:5173",
+  "http://localhost:8080",
   "http://192.168.1.22:8080",
   "https://elizade-chapel-connect.vercel.app",
   process.env.CLIENT_ORIGIN,
