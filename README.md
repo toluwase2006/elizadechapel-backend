@@ -32,4 +32,4 @@ npm start
 - `POST /api/content/proverbial-digest`
 - `DELETE /api/content/proverbial-digest/:id`
 
-Each POST accepts JSON matching the dashboard records. Bible Study requires `day`, `time`, `title`, `scripture`, `summary`, `documentName`, and `documentDataUrl`. Digest requires `day`, `proverb`, `reflection`, `documentName`, and `documentDataUrl`. The `documentDataUrl` is uploaded to Cloudinary; responses return its hosted URL in `documentDataUrl` for frontend compatibility.
+Each POST accepts JSON matching the dashboard records. Bible Study requires `day`, `time`, `title`, `scripture`, `summary`, `documentName`, and `documentDataUrl`. Digest requires `day`, `proverb`, `reflection`, `documentName`, and `documentDataUrl`; its `documentDataUrl` must be an image data URL. The uploaded file is stored in Cloudinary, and responses return its hosted URL in `documentDataUrl` for frontend compatibility.

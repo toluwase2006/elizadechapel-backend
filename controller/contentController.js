@@ -22,9 +22,15 @@ const uploadDocument = async (type, documentDataUrl, documentName) => {
     throw error;
   }
 
+  if (type === "proverbial-digest" && !/^data:image\/[a-z0-9.+-]+[;,]/i.test(documentDataUrl)) {
+    const error = new Error("Proverbial Digest requires an image upload.");
+    error.status = 400;
+    throw error;
+  }
+
   const result = await cloudinary.uploader.upload(documentDataUrl, {
     folder: `elizade-chapel/${type}`,
-    resource_type: "auto",
+    resource_type: type === "proverbial-digest" ? "image" : "auto",
     use_filename: true,
     filename_override: documentName,
     unique_filename: true,
