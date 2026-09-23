@@ -37,6 +37,16 @@ app.get("/api/health", (_req, res) => {
 });
 
 // Routes
+app.use("/api/content", async (_req, _res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    error.status = 503;
+    next(error);
+  }
+});
+
 app.use("/api/content", contentRoutes);
 
 // Error handler
@@ -62,43 +72,43 @@ app.use((error, _req, res, _next) => {
 
 // MongoDB connection
 let isConnected = false;
+let connectionPromise;
 
 async function connectDB() {
   if (isConnected) {
     return;
   }
 
-  try {
-    await mongoose.connect(process.env.MONGO_URI);
-
-    isConnected = true;
-
-    console.log("MongoDB connected");
-  } catch (error) {
-    console.error("MongoDB connection error:", error);
-    throw error;
+  if (!connectionPromise) {
+    connectionPromise = mongoose.connect(process.env.MONGO_URI)
+      .then(() => {
+        isConnected = true;
+        console.log("MongoDB connected");
+      })
+      .catch((error) => {
+        connectionPromise = undefined;
+        console.error("MongoDB connection error:", error);
+        throw error;
+      });
   }
+
+  return connectionPromise;
 }
 
 // Local development server
 if (require.main === module) {
   const port = Number(process.env.PORT) || 5000;
 
-  connectDB()
-    .then(() => {
-      app.listen(port, () => {
-        console.log(`Server running on port ${port}`);
-      });
-    })
-    .catch((error) => {
-      console.error("Failed to start server:", error);
-      process.exit(1);
-    });
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+
+  connectDB().catch((error) => {
+    console.error("MongoDB connection error:", error);
+  });
 }
 
 // Vercel serverless handler
 module.exports = async (req, res) => {
-  await connectDB();
-
   return app(req, res);
 };
