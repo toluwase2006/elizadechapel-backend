@@ -63,6 +63,12 @@ app.use((error, _req, res, _next) => {
     });
   }
 
+  if (error.name === "MongooseServerSelectionError" || error.name === "MongoServerError") {
+    return res.status(503).json({
+      message: "Database service is temporarily unavailable.",
+    });
+  }
+
   console.error(error);
 
   res.status(500).json({
@@ -75,7 +81,7 @@ let isConnected = false;
 let connectionPromise;
 
 async function connectDB() {
-  if (isConnected) {
+  if (isConnected && mongoose.connection.readyState === 1) {
     return;
   }
 
@@ -86,9 +92,11 @@ async function connectDB() {
         console.log("MongoDB connected");
       })
       .catch((error) => {
-        connectionPromise = undefined;
         console.error("MongoDB connection error:", error);
         throw error;
+      })
+      .finally(() => {
+        connectionPromise = undefined;
       });
   }
 
