@@ -12,6 +12,7 @@ const app = express();
 const clientOrigins = [
   "http://localhost:5173",
   "http://192.168.1.22:8080",
+  "https://elizade-chapel-connect.vercel.app",
   process.env.CLIENT_ORIGIN,
 ].filter(Boolean);
 
@@ -77,6 +78,22 @@ async function connectDB() {
     console.error("MongoDB connection error:", error);
     throw error;
   }
+}
+
+// Local development server
+if (require.main === module) {
+  const port = Number(process.env.PORT) || 5000;
+
+  connectDB()
+    .then(() => {
+      app.listen(port, () => {
+        console.log(`Server running on port ${port}`);
+      });
+    })
+    .catch((error) => {
+      console.error("Failed to start server:", error);
+      process.exit(1);
+    });
 }
 
 // Vercel serverless handler
